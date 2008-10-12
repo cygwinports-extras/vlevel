@@ -1,0 +1,24 @@
+DESCRIPTION="Dynamic audio compressor (CLI and LADSPA plugin)"
+HOMEPAGE="http://vlevel.sourceforge.net/"
+SRC_URI="mirror://sourceforge/vlevel/${P}.tar.gz"
+
+PKG_NAMES="${PN} ladspa-${PN}"
+PKG_CONTENTS[0]="usr/bin/ usr/share/"
+PKG_CONTENTS[1]="usr/lib/ladspa/"
+
+DISTCLEANFILES="ladspa.h"
+
+src_compile() {
+	lndirs
+	cd ${B}
+	ln -sf /usr/include/ladspa.h .
+	cygmake
+}
+
+src_install() {
+	cd ${B}
+	dodir /usr/bin
+	cyginstall PREFIX=${D}/usr/bin/ LADSPA_PREFIX=${D}/usr/lib/ladspa/
+	dobin utils/{levelplay,raw2wav,vlevel-dir}
+}
+DOCS="docs/*.txt"
